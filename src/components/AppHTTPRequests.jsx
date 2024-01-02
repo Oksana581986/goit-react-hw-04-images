@@ -20,47 +20,22 @@ export const AppHTTPRequests = () => {
 
  
   useEffect(() => {
+    if (!query) return; 
     const fetchImages = async () => {
-      try {
+        try {
+        setIsLoading(true);
         const response = await axios.get(`${BASE_URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`);
         setImages((images) => [...images, ...response.data.hits]);
-        setPage((page) => page + 1);
       } catch (error) {
         console.error(error);
         setError('Error fetching images. Please try again.');
       } finally {
         setIsLoading(false);
       }
-    }
-        fetchImages();
-    }, [query, page]);
+    };
 
+    fetchImages();
 
-
-    useEffect(() => {
-      if (query === '' && page === 1) {
-        setIsLoading(true);
-    
-        axios
-          .get(
-            `${BASE_URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
-          )
-          .then(response => response.data)
-          .then(data => {
-            if (!data.total) {
-              return alert('Error fetching images. Please try again.');
-            }
-    
-            setImages(images => [...images, ...data.hits]);
-          })
-          .catch(error => {
-            console.error(error);
-            setError('Error fetching images. Please try again.');
-          })
-          .finally(() => {
-            setIsLoading(false);
-          });
-      }
     }, [query, page]);
 
 
